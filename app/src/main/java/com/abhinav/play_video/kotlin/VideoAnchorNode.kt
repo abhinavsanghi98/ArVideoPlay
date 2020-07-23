@@ -1,11 +1,11 @@
-package com.abhinav.play_video
+package com.abhinav.play_video.kotlin
 
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.Node
 import com.google.ar.sceneform.math.Quaternion
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.Renderable
-import com.abhinav.play_video.VideoScaleType.*
+import com.abhinav.play_video.kotlin.VideoScaleType.*
 
 class VideoAnchorNode : AnchorNode() {
 

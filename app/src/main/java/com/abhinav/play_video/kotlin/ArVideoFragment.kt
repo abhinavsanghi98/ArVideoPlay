@@ -1,4 +1,4 @@
-package com.abhinav.play_video
+package com.abhinav.play_video.kotlin
 
 import android.animation.ValueAnimator
 import android.graphics.Bitmap
@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.animation.doOnStart
 import androidx.core.graphics.rotationMatrix
 import androidx.core.graphics.transform
+import com.abhinav.play_video.R
 import com.google.ar.core.AugmentedImage
 import com.google.ar.core.AugmentedImageDatabase
 import com.google.ar.core.Config

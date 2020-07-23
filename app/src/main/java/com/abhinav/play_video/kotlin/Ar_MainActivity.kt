@@ -1,4 +1,4 @@
-package com.abhinav.play_video
+package com.abhinav.play_video.kotlin
 
 import android.app.ActivityManager
 import android.content.Context
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.abhinav.play_video.R
 
 class Ar_MainActivity : AppCompatActivity() {
     /*

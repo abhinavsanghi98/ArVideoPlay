@@ -16,18 +16,18 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <meta-data android:name="com.google.ar.core" android:value="required"/>
-        <activity android:name=".MainActivity">
+        <activity android:name=".java.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Upload_Photo"></activity>
-        <activity android:name=".Upload_Video"></activity>
-        <activity android:name=".Receive_Video"></activity>
+        <activity android:name=".java.Upload_Photo"></activity>
+        <activity android:name=".java.Upload_Video"></activity>
+        <activity android:name=".java.Receive_Video"></activity>
 
-        <activity android:name=".Ar_MainActivity">
+        <activity android:name=".kotlin.Ar_MainActivity">
 
         </activity>
 

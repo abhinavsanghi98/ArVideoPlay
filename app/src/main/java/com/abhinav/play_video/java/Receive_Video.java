@@ -1,9 +1,11 @@
-package com.abhinav.play_video;
+package com.abhinav.play_video.java;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.abhinav.play_video.R;
+import com.abhinav.play_video.java.Constants;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

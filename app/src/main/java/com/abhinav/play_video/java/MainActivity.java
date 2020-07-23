@@ -1,27 +1,17 @@
-package com.abhinav.play_video;
+package com.abhinav.play_video.java;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.abhinav.play_video.kotlin.Ar_MainActivity;
+import com.abhinav.play_video.R;
 
 public class MainActivity extends AppCompatActivity {
     private Button send;
@@ -34,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         receive=findViewById(R.id.receive);
 
         send.setOnClickListener(view -> {
-            Intent i=new Intent(getApplicationContext(),Upload_Photo.class);
+            Intent i=new Intent(getApplicationContext(), Upload_Photo.class);
             startActivity(i);
         });
 
@@ -49,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Editable editable=view2.getText();
                 String name=editable.toString();
-                Intent i=new Intent(getApplicationContext(),Ar_MainActivity.class);
+                Intent i=new Intent(getApplicationContext(), Ar_MainActivity.class);
                 //i.putExtra("roomcode",name);
                 startActivity(i);
             });
