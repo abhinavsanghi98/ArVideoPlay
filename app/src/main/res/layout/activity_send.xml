@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="18dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/imageview"
+        ></ImageView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_photo"
+        android:textStyle="bold"
+        android:text="Choose Image"
+        android:paddingTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/imageview">
+
+    </Button>
+
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/vv"
+        android:layout_below="@+id/button_photo"></VideoView>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_video"
+        android:paddingTop="10dp"
+        android:textStyle="bold"
+        android:text="Choose Video"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/vv">
+
+    </Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/upload"
+        android:text="Create Gift"
+        ></Button>
+</RelativeLayout>

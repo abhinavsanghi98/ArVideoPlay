@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 
-class MainActivity : AppCompatActivity() {
+class Ar_MainActivity : AppCompatActivity() {
     /*
 
     we are extracting 2 urls from the previous activity(I havent added yet those activities to this)
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_ar_main)
 
         if (openGlVersion.toDouble() >= MIN_OPEN_GL_VERSION) {
             supportFragmentManager.inTransaction { replace(R.id.fragmentContainer, ArVideoFragment()) }

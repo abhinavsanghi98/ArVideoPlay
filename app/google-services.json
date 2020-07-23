@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "374351073996",
+    "firebase_url": "https://augreality-1003e.firebaseio.com",
+    "project_id": "augreality-1003e",
+    "storage_bucket": "augreality-1003e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374351073996:android:98b03717509eb361e86869",
+        "android_client_info": {
+          "package_name": "com.abhinav.play_video"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374351073996-t5m4k4v7tekk287ar3go32k3jemv2ovf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmtH7JflRR_zRIfyvmolptEOMISWtWxt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374351073996-t5m4k4v7tekk287ar3go32k3jemv2ovf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

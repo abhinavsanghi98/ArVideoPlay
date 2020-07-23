@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_video"
+        android:textStyle="bold"
+        android:text="Choose Video"
+        android:paddingTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="10dp"
+        android:layout_alignParentTop="true"
+        />
+
+
+
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/videoview"
+        ></VideoView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/create_gift"
+        android:text="Create Gift"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
