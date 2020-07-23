@@ -3,8 +3,10 @@ package com.abhinav.play_video.java;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,18 +15,26 @@ import android.widget.Toast;
 
 import com.abhinav.play_video.R;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Upload_Photo extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 101;
     String roomText;
+    boolean roomExists=false;
     private EditText roomcode;
     private ImageView imageView;
     private Button image_chooser;
@@ -53,15 +63,7 @@ public class Upload_Photo extends AppCompatActivity {
 
     }
 
-    //    @Override
-//    public void onClick(View view) {
-//
-//        if(view==image_chooser)
-//            showImageChooser();
-//
-//        if(view==proceed)
-//            uploadFile();
-//    }
+
     private void showImageChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -74,25 +76,10 @@ public class Upload_Photo extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageFilePath = data.getData();
-//            Handler handler=new Handler();
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        Bitmap bitmap=MediaStore.Images.Media.getBitmap(getContentResolver(),imageFilePath);
-//                        imageView.setImageBitmap(bitmap);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                }
-//            },500);
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageFilePath);
-//                imageView.setImageBitmap(bitmap);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+
+            Picasso.get().load(imageFilePath).fit().centerCrop()
+                    .into(imageView);
+
         }
 
     }
@@ -110,7 +97,9 @@ public class Upload_Photo extends AppCompatActivity {
             return;
         }
 
-        if (imageFilePath != null) {
+
+        if(imageFilePath!=null){
+
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading");
             progressDialog.show();
@@ -124,20 +113,6 @@ public class Upload_Photo extends AppCompatActivity {
                     .addOnSuccessListener(taskSnapshot -> {
                         progressDialog.dismiss();
                         Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
-
-//                            Handler handler = new Handler();
-//
-//                            handler.postDelayed(new Runnable() {
-//
-//                                @Override
-//
-//                                public void run() {
-//
-//                                    mProgressBar.setProgress(0);
-//
-//                                }
-//
-//                            }, 500);
 
                         Toast.makeText(Upload_Photo.this, "Upload successful", Toast.LENGTH_LONG).show();
 
@@ -153,6 +128,7 @@ public class Upload_Photo extends AppCompatActivity {
                         Intent i=new Intent(getApplicationContext(), Upload_Video.class);
                         i.putExtra("room",roomText);
                         startActivity(i);
+                        finish();
 
                     })
 

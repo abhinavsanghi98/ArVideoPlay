@@ -9,18 +9,19 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.abhinav.play_video.kotlin.Ar_MainActivity;
 import com.abhinav.play_video.R;
 
 public class MainActivity extends AppCompatActivity {
-    private Button send;
-    private Button receive;
+    private ImageView send;
+    private ImageView receive;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        send=(Button)findViewById(R.id.send);
+        send= findViewById(R.id.send);
         receive=findViewById(R.id.receive);
 
         send.setOnClickListener(view -> {

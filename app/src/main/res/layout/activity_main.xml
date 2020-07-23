@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".java.MainActivity">
 
     <LinearLayout
@@ -14,21 +15,38 @@
 
         android:orientation="vertical"
         android:id="@+id/central">
-
-        <Button
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send"
-            android:textStyle="bold"
-            android:id="@+id/send"></Button>
+            android:layout_height="1dp"
+            android:layout_marginBottom="20dp"
+            android:background="#E6E6E6"/>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="Receive"
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="170dp"
+            android:layout_gravity="center"
+            android:id="@+id/send"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/send"
+
+            ></ImageView>
+
+
+
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:id="@+id/receive"
-            ></Button>
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:layout_gravity="center"
+            android:src="@drawable/receive"
+            ></ImageView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="50dp"
+            android:background="#E6E6E6"/>
 
 
 

@@ -179,6 +179,7 @@ public class Upload_Video extends AppCompatActivity {
                         Upload upload = new Upload("video",downloadUrl.toString());
 
                         mDatabase.child(roomCode).child("video").setValue(upload);
+                        finish();
 
 
                     })
