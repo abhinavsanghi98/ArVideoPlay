@@ -1,24 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
     android:gravity="center_horizontal"
+    android:layout_centerInParent="true"
     android:orientation="vertical">
 
 
-    <TextView
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:id="@+id/iv"
+        android:layout_gravity="center"
+        >
+
+    </ImageView>
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:hint="image_link"
-        android:id="@+id/image_link"></TextView>
+        android:id="@+id/load_video"
+        android:text="Setup Environment"
+        android:visibility="gone"
+        ></Button>
 
-    <TextView
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/video_link"
-        android:hint="video_link"
-        android:layout_alignParentBottom="true"
-        ></TextView>
+        android:id="@+id/bt_ar"
+        android:text="Start"
+        android:visibility="gone"
 
-</RelativeLayout>
+        ></Button>
+
+
+
+</LinearLayout>
+
+    ></RelativeLayout>

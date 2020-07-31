@@ -57,15 +57,6 @@ public class Upload_Video extends AppCompatActivity {
         upload.setOnClickListener(view -> uploadFile1());
     }
 
-//    @Override
-//    public void onClick(View view) {
-//        if(view==video_chooser)
-//            showVideoChooser();;
-//            if(view==upload)
-//                uploadFinal();
-//
-//
-//    }
     private void showVideoChooser() {
         Intent intent = new Intent();
         intent.setType("video/*");
@@ -83,59 +74,6 @@ public class Upload_Video extends AppCompatActivity {
 
     }
 
-    private void uploadFinal(){
-        if (videoFilePath != null) {
-            //displaying progress dialog while image is uploading
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading");
-            progressDialog.show();
-
-            //getting the storage reference
-            StorageReference sRef = storageReference.child(Constants.STORAGE_PATH_UPLOADS + System.currentTimeMillis() + "." + getFileExtension(videoFilePath));
-
-            //adding the file to reference
-            sRef.putFile(videoFilePath)
-//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            //dismissing the progress dialog
-//                            progressDialog.dismiss();
-//
-//                            //displaying success toast
-//                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
-//
-//                            //creating the upload object to store uploaded image details
-//                            //Upload upload = new Upload("image",taskSnapshot.get);
-//
-//                            //adding an upload to firebase database
-//                            String uploadId = mDatabase.push().getKey();
-//                            mDatabase.child(roomCode).child("image").setValue(upload);
-//                        }
-//                    })
-                    .addOnCompleteListener(task -> {
-                        progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
-
-                        Upload upload1= new Upload("image",task.getResult().getStorage().getDownloadUrl().toString());
-                        //String uploadId = mDatabase.push().getKey();
-                        mDatabase.child(roomCode).child("video").setValue(upload1);
-
-
-
-                    })
-                    .addOnFailureListener(exception -> {
-                        progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-                    })
-                    .addOnProgressListener(taskSnapshot -> {
-                        //displaying the upload progress
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                        progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-                    });
-        } else {
-            //display an error if no file is selected
-        }
-    }
 
     private void uploadFile1() {
 
@@ -153,20 +91,6 @@ public class Upload_Video extends AppCompatActivity {
                     .addOnSuccessListener(taskSnapshot -> {
                         progressDialog.dismiss();
                         Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
-
-//                            Handler handler = new Handler();
-//
-//                            handler.postDelayed(new Runnable() {
-//
-//                                @Override
-//
-//                                public void run() {
-//
-//                                    mProgressBar.setProgress(0);
-//
-//                                }
-//
-//                            }, 500);
 
                         Toast.makeText(Upload_Video.this, "Upload successful", Toast.LENGTH_LONG).show();
 

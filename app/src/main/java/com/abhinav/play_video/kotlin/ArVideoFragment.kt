@@ -18,10 +18,12 @@ import androidx.core.animation.doOnStart
 import androidx.core.graphics.rotationMatrix
 import androidx.core.graphics.transform
 import com.abhinav.play_video.R
+import com.abhinav.play_video.helpers.BitmapHelper
 import com.google.ar.core.AugmentedImage
 import com.google.ar.core.AugmentedImageDatabase
 import com.google.ar.core.Config
 import com.google.ar.core.Session
+import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.FrameTime
 import com.google.ar.sceneform.rendering.ExternalTexture
 import com.google.ar.sceneform.rendering.ModelRenderable
@@ -30,43 +32,48 @@ import java.io.IOException
 
 open class ArVideoFragment : ArFragment() {
 
-    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var mp: MediaPlayer
     private lateinit var externalTexture: ExternalTexture
-    private lateinit var videoRenderable: ModelRenderable
-    private lateinit var videoAnchorNode: VideoAnchorNode
+    private lateinit var videoModel: ModelRenderable
+    private lateinit var anchorVideoNode: VideoAnchorNode
+   // private lateinit var videoAnchorNode: AnchorNode
+   // private lateinit var filename:String
 
-    private var activeAugmentedImage: AugmentedImage? = null
+    private lateinit var arAct:ArMainActivity
+
+    private var trackedAugmentedImages: AugmentedImage? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mediaPlayer = MediaPlayer()
+        //filename="/storage/emulated/0/234.mp4"
+        mp = MediaPlayer()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = super.onCreateView(inflater, container, savedInstanceState)
-
+        arAct= activity as ArMainActivity
         planeDiscoveryController.hide()
         planeDiscoveryController.setInstructionView(null)
         arSceneView.planeRenderer.isEnabled = false
         arSceneView.isLightEstimationEnabled = false
 
         initializeSession()
-        createArScene()
+        createScene()
 
         return view
     }
 
     override fun getSessionConfiguration(session: Session): Config {
 
-        fun loadAugmentedImageBitmap(imageName: String): Bitmap =
-            requireContext().assets.open(imageName).use { return BitmapFactory.decodeStream(it) }
+       fun loadAugmentedImageBitmap(imageName: String): Bitmap=
+    requireContext().assets.open(imageName).use { return BitmapFactory.decodeStream(it) }
 
         fun setupAugmentedImageDatabase(config: Config, session: Session): Boolean {
             try {
                 config.augmentedImageDatabase = AugmentedImageDatabase(session).also { db ->
 
-                    //Test_Video is video.mp4 and Test_Image is image1.png
-                   db.addImage(TEST_VIDEO, loadAugmentedImageBitmap(TEST_IMAGE))
+                     db.addImage(TEST_VIDEO_2, BitmapHelper.getInstance().bitmap)
+                    db.addImage(TEST_VIDEO_1,loadAugmentedImageBitmap(TEST_IMAGE_1))
                 }
                 return true
             } catch (e: IllegalArgumentException) {
@@ -87,10 +94,10 @@ open class ArVideoFragment : ArFragment() {
         }
     }
 
-    private fun createArScene() {
+    private fun createScene() {
         // Create an ExternalTexture for displaying the contents of the video.
         externalTexture = ExternalTexture().also {
-            mediaPlayer.setSurface(it.surface)
+            mp.setSurface(it.surface)
         }
 
         // Create a renderable with a material that has a parameter of type 'samplerExternal' so that
@@ -99,7 +106,7 @@ open class ArVideoFragment : ArFragment() {
             .setSource(requireContext(), R.raw.augmented_video_model)
             .build()
             .thenAccept { renderable ->
-                videoRenderable = renderable
+                videoModel = renderable
                 renderable.isShadowCaster = false
                 renderable.isShadowReceiver = false
                 renderable.material.setExternalTexture("videoTexture", externalTexture)
@@ -109,7 +116,7 @@ open class ArVideoFragment : ArFragment() {
                 return@exceptionally null
             }
 
-        videoAnchorNode = VideoAnchorNode().apply {
+        anchorVideoNode = VideoAnchorNode().apply {
             setParent(arSceneView.scene)
         }
     }
@@ -121,7 +128,7 @@ open class ArVideoFragment : ArFragment() {
 
         // If current active augmented image isn't tracked anymore and video playback is started - pause video playback
         val nonFullTrackingImages = updatedAugmentedImages.filter { it.trackingMethod != AugmentedImage.TrackingMethod.FULL_TRACKING }
-        activeAugmentedImage?.let { activeAugmentedImage ->
+        trackedAugmentedImages?.let { activeAugmentedImage ->
             if (isArVideoPlaying() && nonFullTrackingImages.any { it.index == activeAugmentedImage.index }) {
                 pauseArVideo()
             }
@@ -131,7 +138,7 @@ open class ArVideoFragment : ArFragment() {
         if (fullTrackingImages.isEmpty()) return
 
         // If current active augmented image is tracked but video playback is paused - resume video playback
-        activeAugmentedImage?.let { activeAugmentedImage ->
+        trackedAugmentedImages?.let { activeAugmentedImage ->
             if (fullTrackingImages.any { it.index == activeAugmentedImage.index }) {
                 if (!isArVideoPlaying()) {
                     resumeArVideo()
@@ -150,90 +157,129 @@ open class ArVideoFragment : ArFragment() {
         }
     }
 
-    private fun isArVideoPlaying() = mediaPlayer.isPlaying
+    private fun isArVideoPlaying() = mp.isPlaying
 
     private fun pauseArVideo() {
-        videoAnchorNode.renderable = null
-        mediaPlayer.pause()
+        anchorVideoNode.renderable = null
+        mp.pause()
     }
 
+
+
     private fun resumeArVideo() {
-        mediaPlayer.start()
+        mp.start()
         fadeInVideo()
     }
 
+
     private fun dismissArVideo() {
-        videoAnchorNode.anchor?.detach()
-        videoAnchorNode.renderable = null
-        activeAugmentedImage = null
-        mediaPlayer.reset()
+        anchorVideoNode.anchor?.detach()
+        anchorVideoNode.renderable = null
+        trackedAugmentedImages = null
+        mp.reset()
     }
+
 
     private fun playbackArVideo(augmentedImage: AugmentedImage) {
         Log.d(TAG, "playbackVideo = ${augmentedImage.name}")
 
         requireContext().assets.openFd(augmentedImage.name)
-            .use { descriptor ->
+                .use { a ->
 
-                val metadataRetriever = MediaMetadataRetriever()
-                metadataRetriever.setDataSource(
-                    descriptor.fileDescriptor,
-                    descriptor.startOffset,
-                    descriptor.length
-                )
+                    val metadataRetriever = MediaMetadataRetriever()
+                    metadataRetriever.setDataSource(
+                            a.fileDescriptor,
+                            a.startOffset,
+                            a.length
+                    )
 
-                val videoWidth = metadataRetriever.extractMetadata(METADATA_KEY_VIDEO_WIDTH)?.toFloatOrNull()
-                        ?: 0f
-                val videoHeight = metadataRetriever.extractMetadata(METADATA_KEY_VIDEO_HEIGHT)?.toFloatOrNull()
-                        ?: 0f
-                val videoRotation = metadataRetriever.extractMetadata(METADATA_KEY_VIDEO_ROTATION)?.toFloatOrNull()
-                        ?: 0f
+                    val videoWidth = metadataRetriever.extractMetadata(METADATA_KEY_VIDEO_WIDTH)?.toFloatOrNull()
+                            ?: 0f
+                    val videoHeight = metadataRetriever.extractMetadata(METADATA_KEY_VIDEO_HEIGHT)?.toFloatOrNull()
+                            ?: 0f
+                    val videoRotation = metadataRetriever.extractMetadata(METADATA_KEY_VIDEO_ROTATION)?.toFloatOrNull()
+                            ?: 0f
 
-                // Account for video rotation, so that scale logic math works properly
-                val imageSize = RectF(0f, 0f, augmentedImage.extentX, augmentedImage.extentZ)
-                    .transform(rotationMatrix(videoRotation))
+                    // Account for video rotation, so that scale logic math works properly
+                    val imageSize = RectF(0f, 0f, augmentedImage.extentX, augmentedImage.extentZ)
+                            .transform(rotationMatrix(videoRotation))
 
-                val videoScaleType = VideoScaleType.CenterCrop
+                    val videoScaleType = VideoScaleType.CenterCrop
 
-                videoAnchorNode.setVideoProperties(
-                    videoWidth = videoWidth, videoHeight = videoHeight, videoRotation = videoRotation,
-                    imageWidth = imageSize.width(), imageHeight = imageSize.height(),
-                    videoScaleType = videoScaleType
-                )
+                    anchorVideoNode.setVideoProperties(
+                            videoWidth = videoWidth, videoHeight = videoHeight, videoRotation = videoRotation,
+                            imageWidth = imageSize.width(), imageHeight = imageSize.height(),
+                            videoScaleType = videoScaleType
+                    )
 
-                // Update the material parameters
-                videoRenderable.material.setFloat2(MATERIAL_IMAGE_SIZE, imageSize.width(), imageSize.height())
-                videoRenderable.material.setFloat2(MATERIAL_VIDEO_SIZE, videoWidth, videoHeight)
-                videoRenderable.material.setBoolean(MATERIAL_VIDEO_CROP, VIDEO_CROP_ENABLED)
+                    // Update the material parameters
+                    videoModel.material.setFloat2(MATERIAL_IMAGE_SIZE, imageSize.width(), imageSize.height())
+                    videoModel.material.setFloat2(MATERIAL_VIDEO_SIZE, videoWidth, videoHeight)
+                    videoModel.material.setBoolean(MATERIAL_VIDEO_CROP, VIDEO_CROP_ENABLED)
 
-                mediaPlayer.reset()
-                mediaPlayer.setDataSource(descriptor)
-            }.also {
-                mediaPlayer.isLooping = true
-                mediaPlayer.prepare()
-                mediaPlayer.start()
-            }
+                    mp.reset()
+                    mp.setDataSource(a)
+                }.also {
+                    mp.isLooping = true
+                    mp.prepare()
+                    mp.start()
+                }
 
 
-        videoAnchorNode.anchor?.detach()
-        videoAnchorNode.anchor = augmentedImage.createAnchor(augmentedImage.centerPose)
 
-        activeAugmentedImage = augmentedImage
 
-        externalTexture.surfaceTexture.setOnFrameAvailableListener {
+
+        anchorVideoNode.anchor?.detach()
+        anchorVideoNode.anchor = augmentedImage.createAnchor(augmentedImage.centerPose)
+
+        trackedAugmentedImages = augmentedImage
+
+        externalTexture.surfaceTexture.setOnFrameAvailableListener{
             it.setOnFrameAvailableListener(null)
             fadeInVideo()
         }
     }
+//private fun playbackArVideo(augmentedImage: AugmentedImage) {
+//    Log.d(TAG, "playbackVideo = ${augmentedImage.name}")
+//
+//    requireContext().assets.openFd(augmentedImage.name)
+//            .use { descriptor ->
+//                mp.reset()
+//                context?.let { mp.setDataSource(it,Uri.parse(filename)) }
+//            }.also {
+//                mp.isLooping = true
+//                mp.prepare()
+//                mp.start()
+//            }
+//
+//
+//
+//    videoAnchorNode.anchor?.detach()
+//        videoAnchorNode.anchor = augmentedImage.createAnchor(augmentedImage.centerPose)
+//        videoAnchorNode.localScale = Vector3(
+//                augmentedImage.extentX, // width
+//                1.0f,
+//                augmentedImage.extentZ
+//        ) // height
+//
+//        trackedAugmentedImages = augmentedImage
+//
+//        externalTexture.surfaceTexture.setOnFrameAvailableListener {
+//            it.setOnFrameAvailableListener(null)
+//            videoAnchorNode.renderable = videoModel
+//
+//    }
+//}
+
 
     private fun fadeInVideo() {
         ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 400L
             interpolator = LinearInterpolator()
             addUpdateListener { v ->
-                videoRenderable.material.setFloat(MATERIAL_VIDEO_ALPHA, v.animatedValue as Float)
+                videoModel.material.setFloat(MATERIAL_VIDEO_ALPHA, v.animatedValue as Float)
             }
-            doOnStart { videoAnchorNode.renderable = videoRenderable }
+            doOnStart { anchorVideoNode.renderable = videoModel }
             start()
         }
     }
@@ -245,13 +291,16 @@ open class ArVideoFragment : ArFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        mp.release()
     }
 
     companion object {
         private const val TAG = "ArVideoFragment"
-        private const val TEST_IMAGE =  "image1.png"
-        private const val TEST_VIDEO =  "video.mp4"
+        private const val TEST_IMAGE_1 = "t1.jpeg"
+
+
+        private const val TEST_VIDEO_1 = "V1.mp4"
+        private const val TEST_VIDEO_2 = "test_video_1.mp4"
 
         private const val VIDEO_CROP_ENABLED = true
 
